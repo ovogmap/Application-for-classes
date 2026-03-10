@@ -21,7 +21,7 @@ export default async function Home() {
             <Link href="/signup">회원가입</Link>
           </>
         )}{" "}
-        | <Link href="/class?page=0&sort=recent">수강신청</Link>
+        | <Link href="/class?sort=recent">수강신청</Link>
       </p>
     </div>
   );

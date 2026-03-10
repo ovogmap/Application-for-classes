@@ -16,7 +16,7 @@ export default function TriggerButton() {
         disabled={contentLength === 0}
       >
         {contentLength > 0
-          ? `선택된 ${contentLength}개의 강의 수강 신청하기`
+          ? `${contentLength}개 수강 신청하기`
           : "선택된 강의가 없습니다."}
       </Button>
     </DialogTrigger>
