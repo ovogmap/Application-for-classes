@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/app/actions/api/login";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,6 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v3";
 
@@ -35,6 +38,9 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [submitErrorMessage, setSubmitErrorMessage] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -54,8 +60,19 @@ export default function LoginPage() {
   const emailField = register("email");
   const passwordField = register("password");
 
-  const onSubmit = handleSubmit((values) => {
-    console.log(values);
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      setSubmitErrorMessage("");
+      await login(values);
+      router.push("/class");
+    } catch (error) {
+      const isErrorInstance = error instanceof Error;
+      const fallbackMessage = "로그인 처리 중 오류가 발생했습니다.";
+
+      setSubmitErrorMessage(
+        isErrorInstance && error.message ? error.message : fallbackMessage
+      );
+    }
   });
 
   return (
@@ -106,6 +123,9 @@ export default function LoginPage() {
           </FieldGroup>
         </CardContent>
         <CardFooter className="flex-col gap-2">
+          {submitErrorMessage ? (
+            <p className="w-full text-sm text-destructive">{submitErrorMessage}</p>
+          ) : null}
           <Button
             type="submit"
             className="w-full"

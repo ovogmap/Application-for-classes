@@ -20,6 +20,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v3";
+import { signup } from "../actions/api/signup";
+import { useRouter } from "next/navigation";
 
 const REQUIRED_MESSAGE = "필수 입력값입니다.";
 const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
@@ -28,11 +30,19 @@ const INVALID_PASSWORD_MESSAGE =
 const REQUIRED_NAME_MESSAGE = "이름은 필수입니다.";
 const REQUIRED_PHONE_MESSAGE = "휴대폰 번호는 필수입니다.";
 const INVALID_PHONE_MESSAGE =
-  "올바른 휴대폰 번호 형식이 아닙니다 (예: 01012345678)";
+  "올바른 휴대폰 번호 형식이 아닙니다 (예: 010-1234-5678 or 01012345678)";
 const REQUIRED_ROLE_MESSAGE = "회원 유형은 필수입니다.";
 
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,10}$/;
-const PHONE_REGEX = /^01[0-9]\d{7,8}$/;
+const PHONE_REGEX = /^010(?:-\d{4}-\d{4}|\d{8})$/;
+
+function normalizePhoneNumber(phone: string) {
+  const digitsOnly = phone.replace(/\D/g, "");
+  return `${digitsOnly.slice(0, 3)}-${digitsOnly.slice(
+    3,
+    7
+  )}-${digitsOnly.slice(7, 11)}`;
+}
 
 const formSchema = z.object({
   email: z
@@ -61,6 +71,7 @@ const formSchema = z.object({
 });
 
 export default function SignupPage() {
+  const router = useRouter();
   const {
     control,
     register,
@@ -70,7 +81,7 @@ export default function SignupPage() {
   } = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>(
     {
       resolver: zodResolver(formSchema),
-      mode: "onBlur",
+      mode: "onChange",
       defaultValues: {
         email: "",
         password: "",
@@ -81,9 +92,19 @@ export default function SignupPage() {
     }
   );
 
-  const onSubmit = handleSubmit((values) => {
-    console.log(values);
+  const onSubmit = handleSubmit(async (values) => {
+    const normalizedValues = {
+      ...values,
+      phone: normalizePhoneNumber(values.phone),
+    };
+    try {
+      await signup(normalizedValues);
+      router.push("/login");
+    } catch (error) {
+      window.alert(`${(error as Error).message}`);
+    }
   });
+
   const nameField = register("name");
   const emailField = register("email");
   const phoneField = register("phone");
@@ -132,7 +153,7 @@ export default function SignupPage() {
               <Input
                 id="phone"
                 type="tel"
-                placeholder="12345678"
+                placeholder="010-1234-5678"
                 {...phoneField}
                 onChange={(event) => {
                   phoneField.onChange(event);
