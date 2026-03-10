@@ -1,9 +1,10 @@
-import PurchaseModal from "./_block/components/PurchaseModal";
+import PurchaseModal from "./_block/components/PurchaseModal/PurchaseModal";
 import ContentCard from "./_block/components/ContentCard/ContentCard";
 import AddContentModal from "./_block/components/AddContentModal";
 import { CourseSort } from "../actions/api/get-courses/type";
 import { getCourses } from "../actions/api/get-courses";
 import SelectFilter from "./_block/components/SelectFilter";
+import SelectedContentLength from "./_block/components/SelectedContentLength";
 
 export default async function ClassPage({
   searchParams,
@@ -26,8 +27,8 @@ export default async function ClassPage({
             <h3 className="text-xl font-bold">강의 목록</h3>
             <SelectFilter sort={sort} />
           </div>
-          <div className="flex items-center gap-6">
-            <p className="text-sm text-muted-foreground">선택된 강의 수: 0</p>
+          <div className="flex items-center gap-2">
+            <SelectedContentLength />
             <PurchaseModal />
             <AddContentModal />
           </div>
