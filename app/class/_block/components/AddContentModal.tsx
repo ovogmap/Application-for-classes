@@ -1,5 +1,6 @@
 "use client";
 
+import { createCourse } from "@/app/actions/api/create-course";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +33,7 @@ const DIGITS_ONLY_REGEX = /^\d+$/;
 
 const formSchema = z.object({
   title: z.string().trim().min(1, REQUIRED_MESSAGE),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   instructorName: z.string().trim().min(1, REQUIRED_MESSAGE),
   maxStudents: z
     .string()
@@ -55,6 +56,7 @@ export default function AddContentModal() {
     register,
     formState: { errors, isValid },
     reset,
+    handleSubmit,
   } = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>(
     {
       resolver: zodResolver(formSchema),
@@ -69,6 +71,14 @@ export default function AddContentModal() {
     }
   );
 
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      await createCourse(values);
+      reset();
+    } catch (error) {
+      window.alert(`${(error as Error).message}`);
+    }
+  });
   return (
     <Dialog
       onOpenChange={(open) => {
@@ -170,7 +180,7 @@ export default function AddContentModal() {
           <DialogClose asChild>
             <Button variant="outline">취소</Button>
           </DialogClose>
-          <Button type="submit" disabled={!isValid}>
+          <Button type="submit" disabled={!isValid} onClick={onSubmit}>
             강의 개설
           </Button>
         </DialogFooter>

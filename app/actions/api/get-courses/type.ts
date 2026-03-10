@@ -1,9 +1,8 @@
 export type CourseSort = "recent" | "popular" | "rate";
 
 export type GetCoursesParams = {
-  page?: number;
-  size?: number;
-  sort?: CourseSort;
+  page: string;
+  sort: CourseSort;
 };
 
 export type CourseSummary = {

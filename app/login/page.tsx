@@ -57,7 +57,7 @@ export default function LoginPage() {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await login(values);
-      router.push("/class");
+      router.push("/class?page=0&sort=recent");
     } catch (error) {
       window.alert(`${(error as Error).message}`);
     }

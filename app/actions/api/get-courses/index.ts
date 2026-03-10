@@ -3,9 +3,7 @@
 import { GetCoursesParams, GetCoursesResponse } from "./type";
 import { API_BASE_URL } from "../constants";
 
-const DEFAULT_PAGE = 0;
-const DEFAULT_SIZE = 10;
-const DEFAULT_SORT = "recent";
+const DEFAULT_SIZE = "10";
 
 async function parseErrorMessage(response: Response) {
   try {
@@ -14,23 +12,22 @@ async function parseErrorMessage(response: Response) {
       return data.message;
     }
   } catch {
-    // no-op
+    return `강의 목록 조회에 실패했습니다.`;
   }
 
   return `강의 목록 조회에 실패했습니다. (${response.status})`;
 }
 
 export async function getCourses(
-  params: GetCoursesParams = {}
+  params: GetCoursesParams
 ): Promise<GetCoursesResponse> {
-  const page = params.page ?? DEFAULT_PAGE;
-  const size = params.size ?? DEFAULT_SIZE;
-  const sort = params.sort ?? DEFAULT_SORT;
+  const page = params.page;
+  const sort = params.sort;
 
   const searchParams = new URLSearchParams({
-    page: String(page),
-    size: String(size),
+    page,
     sort,
+    size: DEFAULT_SIZE,
   });
 
   const response = await fetch(`${API_BASE_URL}/courses?${searchParams}`, {

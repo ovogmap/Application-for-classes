@@ -32,7 +32,7 @@ export default function ContentCard({
             <Badge variant="destructive">마감</Badge>
           ) : (
             <p className="text-sm text-muted-foreground">
-              수강신청 현황: {content.availableSeats}/{content.maxStudents}
+              수강신청 현황: {content.currentStudents}/{content.maxStudents}
             </p>
           )}
         </CardAction>

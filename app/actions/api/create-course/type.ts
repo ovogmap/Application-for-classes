@@ -1,5 +1,4 @@
 export type CreateCourseParams = {
-  accessToken: string;
   title: string;
   description?: string;
   instructorName: string;

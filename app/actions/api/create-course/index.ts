@@ -2,6 +2,7 @@
 
 import { CreateCourseParams, CreateCourseResponse } from "./type";
 import { API_BASE_URL } from "../constants";
+import { cookies } from "next/headers";
 
 async function parseErrorMessage(response: Response) {
   try {
@@ -10,7 +11,7 @@ async function parseErrorMessage(response: Response) {
       return data.message;
     }
   } catch {
-    // no-op
+    return `강의 등록 요청에 실패했습니다.`;
   }
 
   return `강의 등록 요청에 실패했습니다. (${response.status})`;
@@ -19,15 +20,15 @@ async function parseErrorMessage(response: Response) {
 export async function createCourse(
   params: CreateCourseParams
 ): Promise<CreateCourseResponse> {
-  const { accessToken, ...requestBody } = params;
-
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
   const response = await fetch(`${API_BASE_URL}/courses`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(params),
     cache: "no-store",
   });
 
