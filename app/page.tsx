@@ -8,7 +8,7 @@ export default function Home() {
       </h1>
       <p className="max-w-md text-lg leading-8">
         <Link href="/login">로그인</Link> | <Link href="/signup">회원가입</Link>{" "}
-        | <Link href="/signup">수강신청</Link>
+        | <Link href="/class">수강신청</Link>
       </p>
     </div>
   );

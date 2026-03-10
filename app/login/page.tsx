@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,11 +10,54 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { z } from "zod/v3";
+
+const REQUIRED_MESSAGE = "필수 입력값입니다.";
+const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, REQUIRED_MESSAGE)
+    .email(INVALID_EMAIL_MESSAGE),
+  password: z.string().min(1, REQUIRED_MESSAGE),
+});
 
 export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors, isValid },
+  } = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>(
+    {
+      resolver: zodResolver(formSchema),
+      mode: "onBlur",
+      defaultValues: {
+        email: "",
+        password: "",
+      },
+    }
+  );
+
+  const emailField = register("email");
+  const passwordField = register("password");
+
+  const onSubmit = handleSubmit((values) => {
+    console.log(values);
+  });
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6">
       <Card className="w-full max-w-sm">
@@ -28,26 +73,45 @@ export default function LoginPage() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <form>
-            <FieldGroup className="flex flex-col gap-6">
-              <Field className="grid gap-2">
-                <FieldLabel htmlFor="email">이메일</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="user@example.com"
-                  required
-                />
-              </Field>
-              <Field className="grid gap-2">
-                <FieldLabel htmlFor="password">비밀번호</FieldLabel>
-                <Input id="password" type="password" required />
-              </Field>
-            </FieldGroup>
-          </form>
+          <FieldGroup className="flex flex-col gap-6">
+            <Field className="grid gap-2" data-invalid={!!errors.email}>
+              <FieldLabel htmlFor="email">이메일</FieldLabel>
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@example.com"
+                {...emailField}
+                onChange={(event) => {
+                  emailField.onChange(event);
+                  clearErrors("email");
+                }}
+                aria-invalid={!!errors.email}
+              />
+              <FieldError errors={[errors.email]} />
+            </Field>
+            <Field className="grid gap-2" data-invalid={!!errors.password}>
+              <FieldLabel htmlFor="password">비밀번호</FieldLabel>
+              <Input
+                id="password"
+                type="password"
+                {...passwordField}
+                onChange={(event) => {
+                  passwordField.onChange(event);
+                  clearErrors("password");
+                }}
+                aria-invalid={!!errors.password}
+              />
+              <FieldError errors={[errors.password]} />
+            </Field>
+          </FieldGroup>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!isValid}
+            onClick={onSubmit}
+          >
             로그인
           </Button>
         </CardFooter>
