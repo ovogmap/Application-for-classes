@@ -105,11 +105,6 @@ export default function SignupPage() {
     }
   });
 
-  const nameField = register("name");
-  const emailField = register("email");
-  const phoneField = register("phone");
-  const passwordField = register("password");
-
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6">
       <Card className="w-full max-w-sm">
@@ -124,11 +119,7 @@ export default function SignupPage() {
                 id="name"
                 type="text"
                 placeholder="홍길동"
-                {...nameField}
-                onChange={(event) => {
-                  nameField.onChange(event);
-                  clearErrors("name");
-                }}
+                {...register("name")}
                 aria-invalid={!!errors.name}
               />
               <FieldError errors={[errors.name]} />
@@ -139,11 +130,7 @@ export default function SignupPage() {
                 id="email"
                 type="email"
                 placeholder="user@example.com"
-                {...emailField}
-                onChange={(event) => {
-                  emailField.onChange(event);
-                  clearErrors("email");
-                }}
+                {...register("email")}
                 aria-invalid={!!errors.email}
               />
               <FieldError errors={[errors.email]} />
@@ -154,11 +141,7 @@ export default function SignupPage() {
                 id="phone"
                 type="tel"
                 placeholder="010-1234-5678"
-                {...phoneField}
-                onChange={(event) => {
-                  phoneField.onChange(event);
-                  clearErrors("phone");
-                }}
+                {...register("phone")}
                 aria-invalid={!!errors.phone}
               />
               <FieldError errors={[errors.phone]} />
@@ -169,11 +152,7 @@ export default function SignupPage() {
                 id="password"
                 type="password"
                 placeholder="영문+숫자 6~10자"
-                {...passwordField}
-                onChange={(event) => {
-                  passwordField.onChange(event);
-                  clearErrors("password");
-                }}
+                {...register("password")}
                 aria-invalid={!!errors.password}
               />
               <FieldError errors={[errors.password]} />

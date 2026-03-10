@@ -14,7 +14,7 @@ async function parseErrorMessage(response: Response) {
       return data.message;
     }
   } catch {
-    // no-op
+    return `로그인 요청에 실패했습니다.`;
   }
 
   return `로그인 요청에 실패했습니다. (${response.status})`;
