@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -10,17 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import PurchaseModal from "./_block/components/PurchaseModal";
 import ContentCard from "./_block/components/ContentCard/ContentCard";
 import { Content } from "./_block/types";
+import AddContentModal from "./_block/components/AddContentModal";
 
 const SORT_OPTIONS = ["recent", "popular", "rate"] as const;
 type SortOption = (typeof SORT_OPTIONS)[number];
@@ -50,7 +42,6 @@ export default async function ClassPage({
 }) {
   const { sort: sortParam } = await searchParams;
   const sort = parseSort(sortParam);
-  const classList = await fetchClassList(sort);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-start justify-start gap-6 py-6">
@@ -82,6 +73,7 @@ export default async function ClassPage({
           <div className="flex items-center gap-6">
             <p className="text-sm text-muted-foreground">선택된 강의 수: 0</p>
             <PurchaseModal />
+            <AddContentModal />
           </div>
         </div>
         <div className="w-full grid grid-cols-3 gap-6">
