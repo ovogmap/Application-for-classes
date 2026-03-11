@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import LogoutButton from "./_block/componrnts/LogoutButton";
+import LogoutButton from "./_block/components/LogoutButton";
 import { Button } from "@/components/ui/button";
 
 export default async function Home() {

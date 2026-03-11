@@ -13,12 +13,21 @@ export default function SubmitButton({
   setIsOpen: (open: boolean) => void;
 }) {
   const searchParams = useSearchParams();
-  const sort = searchParams.get("sort") as CourseSort;
+  const sort = (searchParams.get("sort") as CourseSort) ?? "recent";
 
   const queryClient = useQueryClient();
   const { mutateAsync: batchEnrollMutation } = useMutation({
     mutationFn: batchEnroll,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.failed.length > 0) {
+        const failedCourseIds = data.failed
+          .map((course) => course.courseId)
+          .join(", ");
+
+        window.alert(
+          `이미 수강 신청한 강의가 포함되어 있습니다. ID:${failedCourseIds}`
+        );
+      }
       queryClient.invalidateQueries({
         queryKey: ["courses", sort],
       });

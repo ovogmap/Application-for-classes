@@ -29,7 +29,7 @@ export default function SelectFilter({ sort }: { sort: CourseSort }) {
   return (
     <Select defaultValue={sort} onValueChange={handleSortChange}>
       <SelectTrigger className="max-w-48">
-        <SelectValue placeholder="Select a fruit" />
+        <SelectValue placeholder="정렬" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

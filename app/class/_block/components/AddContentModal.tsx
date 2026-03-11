@@ -105,6 +105,7 @@ export default function AddContentModal() {
   });
 
   useEffect(() => {
+    // 실제 프로젝트라면 user정보 조회 API를 통해 분기 처리 해야 할 곳.
     const userInfo = getLocalStorage<UserInfo>(USER_INFO_STORAGE_KEY);
     if (userInfo?.role === "STUDENT") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -149,9 +150,9 @@ export default function AddContentModal() {
               <FieldError errors={[errors.title]} />
             </Field>
             <Field className="grid gap-2">
-              <FieldLabel htmlFor="title">강의 설명</FieldLabel>
+              <FieldLabel htmlFor="description">강의 설명</FieldLabel>
               <Input
-                id="title"
+                id="description"
                 type="text"
                 placeholder="React의 기본 개념부터 Hooks까지 배웁니다."
                 {...register("description")}
@@ -174,12 +175,12 @@ export default function AddContentModal() {
               <FieldError errors={[errors.instructorName]} />
             </Field>
             <Field className="grid gap-2" data-invalid={!!errors.maxStudents}>
-              <FieldLabel htmlFor="instructorName">
+              <FieldLabel htmlFor="maxStudents">
                 최대 수강 인원<span className="text-destructive">*</span>
               </FieldLabel>
               <InputGroup>
                 <InputGroupInput
-                  id="input-group-url"
+                  id="maxStudents"
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -199,7 +200,7 @@ export default function AddContentModal() {
               </FieldLabel>
               <InputGroup>
                 <InputGroupInput
-                  id="input-group-url"
+                  id="price"
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"

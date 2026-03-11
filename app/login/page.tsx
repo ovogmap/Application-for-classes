@@ -51,7 +51,7 @@ export default function LoginPage() {
   } = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>(
     {
       resolver: zodResolver(formSchema),
-      mode: "onChange",
+      mode: "onBlur",
       defaultValues: {
         email: "",
         password: "",
@@ -117,7 +117,11 @@ export default function LoginPage() {
           </FieldGroup>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" disabled={!isValid}>
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            disabled={!isValid}
+          >
             로그인
           </Button>
         </CardFooter>

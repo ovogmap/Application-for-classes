@@ -10,16 +10,10 @@ import ContentCardWrapper from "./ContentCardWrapper";
 import { CourseSummary } from "@/app/_block/actions/api/get-courses/type";
 import ContentCardstudentsStatus from "./ContentCardstudentsStatus";
 
-export default function ContentCard({
-  content,
-  index,
-}: {
-  content: CourseSummary;
-  index: number;
-}) {
+export default function ContentCard({ content }: { content: CourseSummary }) {
   return (
     <ContentCardWrapper content={content}>
-      <Card key={index} className="relative w-full pt-0">
+      <Card className="relative w-full pt-0">
         <img
           src="https://avatar.vercel.sh/shadcn1"
           alt="Event cover"

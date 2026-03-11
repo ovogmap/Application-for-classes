@@ -82,7 +82,7 @@ export default function SignupPage() {
   } = useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>(
     {
       resolver: zodResolver(formSchema),
-      mode: "onChange",
+      mode: "onBlur",
       defaultValues: {
         email: "",
         password: "",
@@ -98,6 +98,9 @@ export default function SignupPage() {
     onSuccess: () => {
       router.replace("/login");
     },
+    onError: (error) => {
+      window.alert(`${(error as Error).message}`);
+    },
   });
 
   const onSubmit = handleSubmit((values) => {
@@ -108,7 +111,10 @@ export default function SignupPage() {
   });
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6">
+    <form
+      onSubmit={onSubmit}
+      className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6"
+    >
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>회원가입</CardTitle>
@@ -194,12 +200,11 @@ export default function SignupPage() {
             type="submit"
             className="w-full cursor-pointer"
             disabled={!isValid}
-            onClick={onSubmit}
           >
             생성
           </Button>
         </CardFooter>
       </Card>
-    </div>
+    </form>
   );
 }
