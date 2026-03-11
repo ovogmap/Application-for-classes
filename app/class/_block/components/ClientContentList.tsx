@@ -1,39 +1,55 @@
 "use client";
 
-import { CourseSummary } from "@/app/_block/actions/api/get-courses/type";
-import { useEffect, useState } from "react";
+import { CourseSort } from "@/app/_block/actions/api/get-courses/type";
+import { getCoursesPage } from "@/app/class/_block/actions/api/get-courses-page";
+import { useInfiniteScrollTrigger } from "@/app/class/_block/hooks/useInfiniteScrollTrigger";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useRef } from "react";
 import ContentCard from "./ContentCard/ContentCard";
-import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ClientContentList({
-  listData,
-  hasNext,
-  page,
-}: {
-  listData: CourseSummary[];
-  hasNext: boolean;
-  page: string;
-}) {
-  const [contentList, setContentList] = useState<CourseSummary[]>([]);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const handleMore = () => {
-    if (!hasNext) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", (Number(page) + 1).toString());
-    router.push(`/class?${params.toString()}`);
-  };
+const INITIAL_PAGE = 0;
 
-  useEffect(() => {
-    setContentList(listData);
-  }, [listData]);
+export default function ClientContentList({ sort }: { sort: CourseSort }) {
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSuspenseInfiniteQuery({
+    queryKey: ["courses", sort],
+    queryFn: ({ pageParam }) => getCoursesPage({ page: pageParam, sort }),
+    initialPageParam: INITIAL_PAGE,
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
+  });
+
+  const allContentList = useMemo(
+    () => data.pages.flatMap((coursesPage) => coursesPage.content),
+    [data]
+  );
+
+  const handleIntersect = useCallback(() => {
+    fetchNextPage();
+  }, [fetchNextPage]);
+
+  useInfiniteScrollTrigger({
+    targetRef: triggerRef,
+    enabled: Boolean(hasNextPage) && !isFetchingNextPage,
+    onIntersect: handleIntersect,
+  });
+
   return (
     <>
-      {contentList.map((content, index) => (
-        <ContentCard key={index} content={content} index={index} />
+      {allContentList.map((content, index) => (
+        <ContentCard key={content.id} content={content} index={index} />
       ))}
-      <Button onClick={handleMore}>더보기</Button>
+      {hasNextPage && <div ref={triggerRef} className="h-8 w-full" />}
+      {isFetchingNextPage && (
+        <p className="text-sm text-muted-foreground">
+          강의를 불러오는 중입니다.
+        </p>
+      )}
     </>
   );
 }

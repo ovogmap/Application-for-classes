@@ -2,14 +2,18 @@ import PurchaseModal from "./_block/components/PurchaseModal/PurchaseModal";
 import AddContentModal from "./_block/components/AddContentModal";
 import { CourseSort } from "../_block/actions/api/get-courses/type";
 import SelectFilter from "./_block/components/SelectFilter";
-import ContentListContainer from "./_block/components/ContentListContainer";
+import ClientContentList from "./_block/components/ClientContentList";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import ContentListSkeleton from "./_block/components/ContentListSkeleton";
 
 export default async function ClassPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string; sort?: string }>;
 }) {
-  const sort = (await searchParams).sort as CourseSort;
+  const DEFAULT_SORT: CourseSort = "recent";
+  const sort = ((await searchParams).sort as CourseSort) ?? DEFAULT_SORT;
 
   return (
     <div className="min-h-screen w-full flex flex-col items-start justify-start gap-6 py-6">
@@ -26,7 +30,17 @@ export default async function ClassPage({
           </div>
         </div>
         <div className="w-full grid grid-cols-3 gap-6">
-          <ContentListContainer searchParams={searchParams} />
+          <ErrorBoundary
+            fallback={
+              <p className="text-sm text-red-400">
+                강의 목록을 불러오지 못했습니다.
+              </p>
+            }
+          >
+            <Suspense fallback={<ContentListSkeleton />}>
+              <ClientContentList sort={sort} />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
     </div>

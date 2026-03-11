@@ -24,7 +24,7 @@ export default function SelectFilter({ sort }: { sort: CourseSort }) {
   const handleSortChange = (nextSort: CourseSort) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("sort", nextSort);
-    router.push(`/class?${params.toString()}`);
+    router.push(`/class?${params.toString()}`, { scroll: false });
   };
   return (
     <Select defaultValue={sort} onValueChange={handleSortChange}>
@@ -34,18 +34,9 @@ export default function SelectFilter({ sort }: { sort: CourseSort }) {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>정렬</SelectLabel>
-          <SelectItem value="recent" onClick={() => handleSortChange("recent")}>
-            {SORT_LABEL.recent}
-          </SelectItem>
-          <SelectItem
-            value="popular"
-            onClick={() => handleSortChange("popular")}
-          >
-            {SORT_LABEL.popular}
-          </SelectItem>
-          <SelectItem value="rate" onClick={() => handleSortChange("rate")}>
-            {SORT_LABEL.rate}
-          </SelectItem>
+          <SelectItem value="recent">{SORT_LABEL.recent}</SelectItem>
+          <SelectItem value="popular">{SORT_LABEL.popular}</SelectItem>
+          <SelectItem value="rate">{SORT_LABEL.rate}</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
