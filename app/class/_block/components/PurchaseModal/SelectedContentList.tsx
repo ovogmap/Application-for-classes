@@ -8,7 +8,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
-import useSelectedContent from "../../store/selectedContent";
+import useSelectedContent from "../../../../_block/store/selectedContent";
 import { TrashIcon } from "lucide-react";
 
 export default function SelectedContentList() {

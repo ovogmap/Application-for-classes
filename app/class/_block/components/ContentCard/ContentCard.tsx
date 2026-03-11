@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ContentCardWrapper from "./ContentCardWrapper";
-import { CourseSummary } from "@/app/actions/api/get-courses/type";
+import { CourseSummary } from "@/app/_block/actions/api/get-courses/type";
 import ContentCardstudentsStatus from "./ContentCardstudentsStatus";
 
 export default function ContentCard({

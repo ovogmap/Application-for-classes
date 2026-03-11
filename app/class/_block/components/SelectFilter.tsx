@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CourseSort } from "@/app/actions/api/get-courses/type";
+import { CourseSort } from "@/app/_block/actions/api/get-courses/type";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const SORT_LABEL: Record<CourseSort, string> = {

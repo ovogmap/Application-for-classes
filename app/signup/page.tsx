@@ -20,7 +20,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v3";
-import { signup } from "../actions/api/signup";
+import { signup } from "../_block/actions/api/signup";
 import { useRouter } from "next/navigation";
 
 const REQUIRED_MESSAGE = "필수 입력값입니다.";

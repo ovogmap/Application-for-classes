@@ -1,6 +1,7 @@
 "use client";
 
-import { createCourse } from "@/app/actions/api/create-course";
+import { createCourse } from "@/app/_block/actions/api/create-course";
+import { useUserInfo } from "@/app/_block/store/userInfo";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -52,6 +53,7 @@ const formSchema = z.object({
 });
 
 export default function AddContentModal() {
+  const { userInfo } = useUserInfo();
   const {
     register,
     formState: { errors, isValid },
@@ -79,6 +81,11 @@ export default function AddContentModal() {
       window.alert(`${(error as Error).message}`);
     }
   });
+
+  if (userInfo === null || userInfo?.role === "STUDENT") {
+    return null;
+  }
+
   return (
     <Dialog
       onOpenChange={(open) => {

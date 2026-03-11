@@ -1,10 +1,9 @@
 import PurchaseModal from "./_block/components/PurchaseModal/PurchaseModal";
 import ContentCard from "./_block/components/ContentCard/ContentCard";
 import AddContentModal from "./_block/components/AddContentModal";
-import { CourseSort } from "../actions/api/get-courses/type";
-import { getCourses } from "../actions/api/get-courses";
+import { CourseSort } from "../_block/actions/api/get-courses/type";
+import { getCourses } from "../_block/actions/api/get-courses";
 import SelectFilter from "./_block/components/SelectFilter";
-import SelectedContentLength from "./_block/components/SelectedContentLength";
 
 export default async function ClassPage({
   searchParams,
@@ -14,7 +13,7 @@ export default async function ClassPage({
   const sort = (await searchParams).sort as CourseSort;
   const page = (await searchParams).page as string;
 
-  const contentListData = await getCourses({ page, sort });
+  const contentListData = await getCourses({ page: "0", sort });
   const contentList = contentListData.content;
 
   console.log("contentListData:", contentListData);
@@ -28,7 +27,6 @@ export default async function ClassPage({
             <SelectFilter sort={sort} />
           </div>
           <div className="flex items-center gap-2">
-            <SelectedContentLength />
             <PurchaseModal />
             <AddContentModal />
           </div>

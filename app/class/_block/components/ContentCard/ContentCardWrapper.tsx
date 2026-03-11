@@ -1,7 +1,7 @@
 "use client";
 
-import { CourseSummary } from "@/app/actions/api/get-courses/type";
-import useSelectedContent from "../../store/selectedContent";
+import { CourseSummary } from "@/app/_block/actions/api/get-courses/type";
+import useSelectedContent from "../../../../_block/store/selectedContent";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 

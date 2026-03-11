@@ -1,7 +1,7 @@
 "use server";
 
-import { getCourses } from "@/app/actions/api/get-courses";
-import { CourseSort } from "@/app/actions/api/get-courses/type";
+import { getCourses } from "@/app/_block/actions/api/get-courses";
+import { CourseSort } from "@/app/_block/actions/api/get-courses/type";
 import ContentCard from "../components/ContentCard/ContentCard";
 
 export default async function loadMoreContentCard(

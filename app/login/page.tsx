@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/app/actions/api/login";
+import { login } from "@/app/_block/actions/api/login";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v3";
+import { useUserInfo } from "../_block/store/userInfo";
 
 const REQUIRED_MESSAGE = "필수 입력값입니다.";
 const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
@@ -38,6 +39,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setUserInfo } = useUserInfo();
 
   const {
     register,
@@ -56,8 +58,9 @@ export default function LoginPage() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await login(values);
-      router.push("/class?sort=recent");
+      const response = await login(values);
+      router.push("/");
+      setUserInfo(response.user);
     } catch (error) {
       window.alert(`${(error as Error).message}`);
     }

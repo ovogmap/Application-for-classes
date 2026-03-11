@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useSelectedContent from "../../store/selectedContent";
+import useSelectedContent from "../../../../_block/store/selectedContent";
 
 export default function SubmitButton() {
   const { getLength } = useSelectedContent();

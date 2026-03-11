@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Content } from "../../types";
-import useSelectedContent from "../../store/selectedContent";
+import useSelectedContent from "../../../../_block/store/selectedContent";
 
 export default function ContentCardFooterButton({
   content,

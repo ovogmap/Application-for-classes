@@ -1,6 +1,6 @@
 "use client";
 
-import useSelectedContent from "../store/selectedContent";
+import useSelectedContent from "../../../_block/store/selectedContent";
 
 export default function SelectedContentLength() {
   const { getLength } = useSelectedContent();

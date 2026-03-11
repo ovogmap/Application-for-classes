@@ -5,7 +5,7 @@ export type LoginParams = {
   password: string;
 };
 
-export type LoginUser = {
+export type UserInfo = {
   id: number;
   email: string;
   name: string;
@@ -16,5 +16,5 @@ export type LoginUser = {
 export type LoginResponse = {
   accessToken: string;
   tokenType: "Bearer";
-  user: LoginUser;
+  user: UserInfo;
 };

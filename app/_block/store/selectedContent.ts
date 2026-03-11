@@ -1,4 +1,4 @@
-import { CourseSummary } from "@/app/actions/api/get-courses/type";
+import { CourseSummary } from "@/app/_block/actions/api/get-courses/type";
 import { create } from "zustand";
 
 type CourseId = CourseSummary["id"];
