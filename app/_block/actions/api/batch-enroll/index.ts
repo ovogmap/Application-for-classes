@@ -2,6 +2,7 @@
 
 import { BatchEnrollParams, BatchEnrollResponse } from "./type";
 import { API_BASE_URL } from "../constants";
+import { cookies } from "next/headers";
 
 async function parseErrorMessage(response: Response) {
   try {
@@ -19,7 +20,9 @@ async function parseErrorMessage(response: Response) {
 export async function batchEnroll(
   params: BatchEnrollParams
 ): Promise<BatchEnrollResponse> {
-  const { accessToken, courseIds } = params;
+  const { courseIds } = params;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
 
   const response = await fetch(`${API_BASE_URL}/enrollments/batch`, {
     method: "POST",

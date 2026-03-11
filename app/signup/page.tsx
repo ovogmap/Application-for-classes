@@ -22,6 +22,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v3";
 import { signup } from "../_block/actions/api/signup";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 const REQUIRED_MESSAGE = "필수 입력값입니다.";
 const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
@@ -92,17 +93,18 @@ export default function SignupPage() {
     }
   );
 
-  const onSubmit = handleSubmit(async (values) => {
-    const normalizedValues = {
+  const { mutateAsync: signupMutation } = useMutation({
+    mutationFn: signup,
+    onSuccess: () => {
+      router.replace("/login");
+    },
+  });
+
+  const onSubmit = handleSubmit((values) => {
+    signupMutation({
       ...values,
       phone: normalizePhoneNumber(values.phone),
-    };
-    try {
-      await signup(normalizedValues);
-      router.push("/login");
-    } catch (error) {
-      window.alert(`${(error as Error).message}`);
-    }
+    });
   });
 
   return (

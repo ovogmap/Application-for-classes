@@ -2,6 +2,10 @@
 
 import { logout } from "@/app/_block/actions/api/logout";
 import { useRouter } from "next/navigation";
+import {
+  removeLocalStorage,
+  USER_INFO_STORAGE_KEY,
+} from "../utils/localStorage";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -11,7 +15,8 @@ export default function LogoutButton() {
       className="cursor-pointer underline"
       onClick={async () => {
         await logout();
-        router.push("/");
+        removeLocalStorage(USER_INFO_STORAGE_KEY);
+        router.replace("/");
       }}
     >
       로그아웃

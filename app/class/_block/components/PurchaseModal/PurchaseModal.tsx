@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,10 +13,13 @@ import SelectedContentLength from "../SelectedContentLength";
 import SelectedContentList from "./SelectedContentList";
 import TriggerButton from "./TriggerButton";
 import SubmitButton from "./SubmitButton";
+import { useState } from "react";
 
 export default function PurchaseModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <TriggerButton />
       <DialogContent>
         <DialogHeader>
@@ -26,7 +31,7 @@ export default function PurchaseModal() {
           <DialogClose asChild>
             <Button variant="outline">취소</Button>
           </DialogClose>
-          <SubmitButton />
+          <SubmitButton setIsOpen={setIsOpen} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

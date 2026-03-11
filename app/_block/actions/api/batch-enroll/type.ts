@@ -1,5 +1,4 @@
 export type BatchEnrollParams = {
-  accessToken: string;
   courseIds: number[];
 };
 

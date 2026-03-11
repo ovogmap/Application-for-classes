@@ -5,16 +5,18 @@ type CourseId = CourseSummary["id"];
 
 type SelectedContentStore = {
   selectedContent: Map<CourseId, CourseSummary>;
+  reset: () => void;
   addSelectedContent: (content: CourseSummary) => void;
   removeSelectedContent: (id: CourseId) => void;
   isSelectedContent: (id: CourseId) => boolean;
-  clearSelectedContent: () => void;
   getLength: () => number;
   getSelectedContent: () => CourseSummary[];
+  getSelectedContentIds: () => CourseId[];
 };
 
 const useSelectedContent = create<SelectedContentStore>((set, get) => ({
   selectedContent: new Map<CourseId, CourseSummary>(),
+  reset: () => set({ selectedContent: new Map<CourseId, CourseSummary>() }),
   addSelectedContent: (content) =>
     set((state) => {
       const next = new Map(state.selectedContent);
@@ -28,10 +30,9 @@ const useSelectedContent = create<SelectedContentStore>((set, get) => ({
       return { selectedContent: next };
     }),
   isSelectedContent: (id) => get().selectedContent.has(id),
-  clearSelectedContent: () =>
-    set({ selectedContent: new Map<CourseId, CourseSummary>() }),
   getLength: () => get().selectedContent.size,
   getSelectedContent: () => Array.from(get().selectedContent.values()),
+  getSelectedContentIds: () => Array.from(get().selectedContent.keys()),
 }));
 
 export default useSelectedContent;

@@ -23,7 +23,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v3";
-import { useUserInfo } from "../_block/store/userInfo";
+import {
+  setLocalStorage,
+  USER_INFO_STORAGE_KEY,
+} from "../_block/utils/localStorage";
+import { useMutation } from "@tanstack/react-query";
 
 const REQUIRED_MESSAGE = "필수 입력값입니다.";
 const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
@@ -39,7 +43,6 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUserInfo } = useUserInfo();
 
   const {
     register,
@@ -56,18 +59,26 @@ export default function LoginPage() {
     }
   );
 
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      const response = await login(values);
-      router.push("/");
-      setUserInfo(response.user);
-    } catch (error) {
+  const { mutate: loginMutation } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      router.replace("/");
+      setLocalStorage(USER_INFO_STORAGE_KEY, data.user);
+    },
+    onError: (error) => {
       window.alert(`${(error as Error).message}`);
-    }
+    },
+  });
+
+  const onSubmit = handleSubmit((values) => {
+    loginMutation(values);
   });
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6">
+    <form
+      onSubmit={onSubmit}
+      className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-6"
+    >
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
@@ -106,16 +117,11 @@ export default function LoginPage() {
           </FieldGroup>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!isValid}
-            onClick={onSubmit}
-          >
+          <Button type="submit" className="w-full" disabled={!isValid}>
             로그인
           </Button>
         </CardFooter>
       </Card>
-    </div>
+    </form>
   );
 }

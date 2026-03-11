@@ -1,7 +1,12 @@
 "use client";
 
 import { createCourse } from "@/app/_block/actions/api/create-course";
-import { useUserInfo } from "@/app/_block/store/userInfo";
+import { CourseSort } from "@/app/_block/actions/api/get-courses/type";
+import { UserInfo } from "@/app/_block/actions/api/login/type";
+import {
+  getLocalStorage,
+  USER_INFO_STORAGE_KEY,
+} from "@/app/_block/utils/localStorage";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +30,9 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v3";
 
@@ -53,7 +61,12 @@ const formSchema = z.object({
 });
 
 export default function AddContentModal() {
-  const { userInfo } = useUserInfo();
+  const [isStudent, setIsStudent] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const sort = searchParams.get("sort") as CourseSort;
+  const queryClient = useQueryClient();
+
   const {
     register,
     formState: { errors, isValid },
@@ -73,25 +86,44 @@ export default function AddContentModal() {
     }
   );
 
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      await createCourse(values);
+  const { mutate: createCourseMutation } = useMutation({
+    mutationFn: createCourse,
+    onSuccess: () => {
       reset();
-    } catch (error) {
+      queryClient.invalidateQueries({
+        queryKey: ["courses", sort],
+      });
+      setIsOpen(false);
+    },
+    onError: (error) => {
       window.alert(`${(error as Error).message}`);
-    }
+    },
   });
 
-  if (userInfo === null || userInfo?.role === "STUDENT") {
+  const onSubmit = handleSubmit((values) => {
+    createCourseMutation(values);
+  });
+
+  useEffect(() => {
+    const userInfo = getLocalStorage<UserInfo>(USER_INFO_STORAGE_KEY);
+    if (userInfo?.role === "STUDENT") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsStudent(true);
+    }
+  }, []);
+
+  if (isStudent) {
     return null;
   }
 
   return (
     <Dialog
+      open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
           reset();
         }
+        setIsOpen(open);
       }}
     >
       <DialogTrigger asChild>
